@@ -2,6 +2,6 @@
 .vscode/
 .DS_Store/
 
-main/media/*
+media/*
 
 main/local_settings.py
