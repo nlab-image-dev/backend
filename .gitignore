@@ -3,3 +3,5 @@
 .DS_Store/
 
 main/media/*
+
+main/local_settings.py
