@@ -11,10 +11,11 @@ class ArticleModel(models.Model):
     text = models.TextField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     posted_time = models.DateTimeField()
-    file = models.FileField(null=True)
+    file = models.FileField(upload_to="media/%Y%m%d/", null=True)
 
 class CommentModel(models.Model):
     text = models.TextField()
+    article_id = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     posted_time = models.DateTimeField()
     
