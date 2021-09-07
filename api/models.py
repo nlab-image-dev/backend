@@ -7,16 +7,16 @@ class TagModel(models.Model):
     
 class ArticleModel(models.Model):
     title = models.CharField(max_length=100)
-    tag_id = models.ForeignKey(TagModel, on_delete=models.PROTECT, null=True)
+    tag = models.ForeignKey(TagModel, on_delete=models.PROTECT, null=True)
     text = models.TextField()
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     posted_time = models.DateTimeField()
     file = models.FileField(upload_to="media/%Y%m%d/", null=True)
 
 class CommentModel(models.Model):
     text = models.TextField()
-    article_id = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    article = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     posted_time = models.DateTimeField()
     
 

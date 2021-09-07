@@ -3,12 +3,11 @@
 ```bash
 conda create -n <name> python=3.9
 conda activate <name>
-pip install django==3.2.6
+pip install -r requirements.txt
 ```
 
 ## Run Django app
 ```bash
-cd backend/
 python manage.py runserver 
 ```
 もしポートを指定したい場合は

@@ -48,8 +48,10 @@ class AuthInfoGetView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get(self, request, format=None):
-        return Response(data={
-            'user_id': request.user.id,
-            'username': request.user.username,
+        return Response(
+            data={
+                'user_id': request.user.id,
+                'username': request.user.username,
             },
-            status=status.HTTP_200_OK)
+            status=status.HTTP_200_OK
+        )

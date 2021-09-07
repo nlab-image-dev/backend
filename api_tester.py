@@ -2,21 +2,30 @@ import requests
 import datetime
 import json
 
-def article_post():
-    url = "http://localhost:8000/api/test/"
+URL = "http://localhost:8000/api/"
+TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6IlRhcm8iLCJleHAiOjE2MzA5ODM3MjQsImVtYWlsIjoiIn0.CFiicXQkrvOqHS3_QX5e8TRj_cVdnAt6MHX2Efw0vfc"
+
+def article_post(token):
+    url = URL + "article/"
+    headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
         "title": "aaa",
-        "tag_id": 1,
-        "text": "aaaaaa",
-        "user_id": 1,
-        "posted_time": datetime.datetime.now().timestamp(),
+        "tag_id": 0,
+        "text": "hoge",
+        "user_id": 2,
     }
 
-    requests.post(url, json.dumps(data))
+    response = requests.post(url=url, data=json.dumps(data), headers=headers)
+    print(response.json())
+
+def article_get():
+    url = URL + "article/"
+    response = requests.get(url)
+    print(response.json())
 
 
 def signup():
-    url = "http://localhost:8000/api/signup/"
+    url = URL + "signup/"
     headers = {
         "Content-Type" : "application/json"
     }
@@ -28,7 +37,7 @@ def signup():
     response = requests.post(url, json.dumps(data), headers=headers)
 
 def login():
-    url = "http://localhost:8000/api/login/"
+    url = URL + "login/"
     headers = {'Content-Type': 'application/json'}
     data = {'username': 'Taro', 'password': 'taro'}
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -38,7 +47,7 @@ def login():
     myinfo(response.json()['token'])
 
 def myinfo(token):
-    url = "http://localhost:8000/api/myinfo/"
+    url = URL + "myinfo/"
     # GET
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     response = requests.get(url=url, headers=headers)
@@ -47,6 +56,8 @@ def myinfo(token):
 
 
 if __name__ == "__main__":
-    # article_post()
+    article_post(TOKEN)
+    # article_get()
     # signup()
-    login()
+    # login()
+    # myinfo(TOKEN)
