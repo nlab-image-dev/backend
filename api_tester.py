@@ -3,6 +3,7 @@ import datetime
 import json
 
 URL = "http://localhost:8000/api/"
+# URL = "https://nlab-image-dev.herokuapp.com/api/"
 TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6IlRhcm8iLCJleHAiOjE2MzA5ODM3MjQsImVtYWlsIjoiIn0.CFiicXQkrvOqHS3_QX5e8TRj_cVdnAt6MHX2Efw0vfc"
 
 def article_post(token):
