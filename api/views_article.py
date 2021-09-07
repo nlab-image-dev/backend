@@ -50,13 +50,22 @@ class ArticleView(views.APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
-        article_ls = get_articles()
+        try:
+            article_ls = get_articles()
+            message = "success"
+            status = 200
+        except Exception as e:
+            print(e)
+            message = str(e)
+            status = 500
+
         # JSON形式に整形
         send_data = {
-            "articles": article_ls,
+            "message": message,
+            "articles": article_ls if status==200 else [],
         }
         
-        return Response(json.dumps(send_data), status=200)
+        return Response(json.dumps(send_data), status=status)
 
 
     def post(self, request, *args, **kwargs):
@@ -67,15 +76,15 @@ class ArticleView(views.APIView):
         # postされたデータをデータベースへ登録する
         try:
             add_article(recieve_data)
-            res = "success"
+            message = "success"
             status = 200
         except Exception as e:
             print(e)
-            res = str(e)
+            message = str(e)
             status = 500
 
         send_data = {
-            "message": res,
+            "message": message,
         }
         return Response(json.dumps(send_data), status=status)
 

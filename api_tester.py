@@ -56,8 +56,8 @@ def myinfo(token):
 
 
 if __name__ == "__main__":
-    article_post(TOKEN)
-    # article_get()
+    # article_post(TOKEN)
+    article_get()
     # signup()
     # login()
     # myinfo(TOKEN)
