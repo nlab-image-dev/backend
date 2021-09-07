@@ -143,9 +143,9 @@ if __name__ == "__main__":
     # article_get()
     # article_put(TOKEN)
     # article_delete(TOKEN)
-    article_get()
+    # article_get()
 
-    # tag_post(TOKEN)
+    tag_post(TOKEN)
     # tag_get()
 
     # comment_post(TOKEN)
