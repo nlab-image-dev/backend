@@ -116,6 +116,24 @@ def tag_post(token):
     print(response.json())
 
 
+def comment_get():
+    url = URL + "comment/1/"
+
+    response = requests.get(url)
+    print(response.json())
+
+def comment_post(token):
+    url = URL + "comment/1/"
+    headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
+    data = {
+        "text": "abccba",
+        "user_id": 2,
+    }
+
+    response = requests.post(url=url, data=json.dumps(data), headers=headers)
+    print(response.json())
+
+
 if __name__ == "__main__":
     # signup()
     # login()
@@ -128,4 +146,7 @@ if __name__ == "__main__":
     # article_get()
 
     # tag_post(TOKEN)
-    tag_get()
+    # tag_get()
+
+    # comment_post(TOKEN)
+    comment_get()

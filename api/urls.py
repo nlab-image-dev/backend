@@ -19,5 +19,5 @@ urlpatterns = [
 
     path('tag/', TagView.as_view(), name="tag"),
 
-    path('comment/', CommentView.as_view(), name="comment")
+    path('comment/<int:article_id>/', CommentView.as_view(), name="comment")
 ]
