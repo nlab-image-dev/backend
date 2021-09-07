@@ -5,11 +5,19 @@ from rest_framework.response import Response
 
 from .models import TagModel
 
-def get_tags():
+def get_tags(data):
     '''
     タグ一覧を取得
     '''
-    tags = TagModel.objects.all()
+    tag_id = data["tag_id"] if('tag_id' in data.keys()) else 0
+    keyword = data["keyword"] if('keyword' in data.keys()) else None
+
+    if tag_id == 0:
+        tags = TagModel.objects.all()
+        if keyword is not None:
+            tags = tags.filter(tag_name__icontains=keyword)
+    else:
+        tags = TagModel.objects.filter(id=tag_id)
 
     tags_ls = []
     for tag in tags:
@@ -37,7 +45,13 @@ class TagView(views.APIView):
     
     def get(self, request, *args, **kwargs):
         try:
-            tags_ls = get_tags()
+            recieve_data = json.loads(request.body)
+            print(recieve_data)
+        except Exception as e:
+            recieve_data = {}
+
+        try:
+            tags_ls = get_tags(recieve_data)
             status = 200
             message = "success"
         except Exception as e:

@@ -20,23 +20,26 @@ def signup():
         "password": "taro",
     }
 
-    requests.post(url, json.dumps(data), headers=headers)
+    response = requests.post(url, json.dumps(data), headers=headers)
+    print(response, response.text)
+    print(response.json())
 
 def login():
     url = URL + "login/"
     headers = {'Content-Type': 'application/json'}
     data = {'username': 'Taro', 'password': 'taro'}
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
-    # print(response, response.text)
+    print(response, response.text)
     print(response.json())
 
-    myinfo(response.json()['token'])
+    # myinfo(response.json()['token'])
 
 def myinfo(token):
     url = URL + "myinfo/"
     # GET
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     response = requests.get(url=url, headers=headers)
+    print(response, response.text)
     print(response.json())
 
 
@@ -94,15 +97,37 @@ def article_delete(token):
 
 def tag_get():
     url = URL + "tag/"
-    
-    response = requests.get(url)
+    data = {
+        # "tag_id": 1,
+        "keyword": "浸透",
+    }
+
+    response = requests.get(url, data=json.dumps(data))
     print(response.json())
 
 def tag_post(token):
     url = URL + "tag/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "tag_name": "浸透学習"
+        "tag_name": "DNN"
+    }
+
+    response = requests.post(url=url, data=json.dumps(data), headers=headers)
+    print(response.json())
+
+
+def comment_get():
+    url = URL + "comment/1/"
+
+    response = requests.get(url)
+    print(response.json())
+
+def comment_post(token):
+    url = URL + "comment/1/"
+    headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
+    data = {
+        "text": "abccba",
+        "user_id": 2,
     }
 
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -120,5 +145,8 @@ if __name__ == "__main__":
     # article_delete(TOKEN)
     # article_get()
 
-    tag_post(TOKEN)
-    tag_get()
+    # tag_post(TOKEN)
+    # tag_get()
+
+    # comment_post(TOKEN)
+    comment_get()
