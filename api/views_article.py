@@ -65,7 +65,7 @@ def add_article(data):
         tag = tag,
         text = data['text'],
         user = user,
-        posted_time = datetime.datetime.now(),
+        posted_time = datetime.now(),
     )
 
     article.save()
