@@ -32,7 +32,9 @@ def add_tag(data):
     tag.save()
 
 class TagView(views.APIView):
-
+    # token認証
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
     def get(self, request, *args, **kwargs):
         try:
             tags_ls = get_tags()
