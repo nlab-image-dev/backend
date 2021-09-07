@@ -5,15 +5,16 @@ import json
 URL = "http://localhost:8000/api/"
 # URL = "https://nlab-image-dev.herokuapp.com/api/"
 TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6IlRhcm8iLCJleHAiOjE2MzA5ODM3MjQsImVtYWlsIjoiIn0.CFiicXQkrvOqHS3_QX5e8TRj_cVdnAt6MHX2Efw0vfc"
+# TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6IlRhcm8iLCJleHAiOjE2MzA5OTcyMjcsImVtYWlsIjoiIn0.6V7AO-pdiUY_FMK2jw3SlMGpuYwG3aXOmfIhmpsnetM"
 
 def article_post(token):
     url = URL + "article/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "title": "aaa",
+        "title": "abc",
         "tag_id": 1,
-        "text": "hoge",
-        "user_id": 2,
+        "text": "abcabc",
+        "user_id": 1,
     }
 
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -27,7 +28,7 @@ def article_get():
         "end_num": 10,
         # "user_id": 2,
         # "tag_id": 1,
-        "keyword": "hogehoge",
+        # "keyword": "hogehoge",
     }
     response = requests.get(url, data=json.dumps(data))
     print(response.json())
@@ -88,7 +89,7 @@ def myinfo(token):
 
 
 if __name__ == "__main__":
-    # article_post(TOKEN)
+    article_post(TOKEN)
     article_get()
     # article_put(TOKEN)
     # article_delete(TOKEN)
