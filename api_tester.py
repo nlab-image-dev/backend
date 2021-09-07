@@ -49,9 +49,9 @@ def article_post(token):
     url = URL + "article/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "title": "abc",
-        "tag_id": 1,
-        "text": "abcabc",
+        "title": "gan",
+        "tag_ids": [1, 2],
+        "text": "gan+aux",
         "user_id": 1,
     }
 
@@ -65,7 +65,7 @@ def article_get():
         "start_num": 0,
         "end_num": 10,
         # "user_id": 2,
-        # "tag_id": 1,
+        "tag_id": 1,
         # "keyword": "hogehoge",
     }
     response = requests.get(url, data=json.dumps(data))
@@ -75,9 +75,9 @@ def article_put(token):
     url = URL + "article/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "article_id": 4,
-        "title": "444",
-        "tag_id": 1,
+        "article_id": 11,
+        "title": "aaa",
+        "tag_ids": [1,2],
         "text": "hogehoge",
     }
 
@@ -88,7 +88,7 @@ def article_delete(token):
     url = URL + "article/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "article_id": 6
+        "article_id": 11
     }
 
     response = requests.delete(url=url, data=json.dumps(data), headers=headers)
@@ -109,7 +109,7 @@ def tag_post(token):
     url = URL + "tag/"
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
-        "tag_name": "DNN"
+        "tag_name": "浸透学習"
     }
 
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -143,10 +143,10 @@ if __name__ == "__main__":
     # article_get()
     # article_put(TOKEN)
     # article_delete(TOKEN)
-    # article_get()
+    article_get()
 
     # tag_post(TOKEN)
     # tag_get()
 
     # comment_post(TOKEN)
-    comment_get()
+    # comment_get()
