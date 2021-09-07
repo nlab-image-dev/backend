@@ -1,10 +1,7 @@
 from datetime import datetime
 import json
-import datetime
-from requests.api import delete
 
-# from django.http import HttpResponse
-# from django.views import View
+from django.db.models import Q
 from rest_framework import status, views, permissions
 from rest_framework.response import Response
 
@@ -12,11 +9,19 @@ from django.contrib.auth.models import User
 from .models import ArticleModel, TagModel
 
 
-def get_articles(article_id=0, order_by="posted_time", start_num=0, end_num=10, user_id=0, tag_id=0):
+def get_articles(data):
     '''
     articleを取得
     引数で取得内容を選択
     '''
+    article_id = data['article_id'] if ('article_id' in data.keys()) else 0
+    order_by = data['order_by'] if ('order_by' in data.keys()) else "posted_time"
+    start_num = data['start_num'] if ('start_num' in data.keys()) else 0
+    end_num = data['end_num'] if ('end_num' in data.keys()) else 10
+    user_id = data['user_id'] if ('user_id' in data.keys()) else 0
+    tag_id = data['tag_id'] if ('tag_id' in data.keys()) else 0
+    keyword = data['keyword'] if ('keyword' in data.keys()) else None
+
     if article_id == 0:
         articles = ArticleModel.objects.all()
         if user_id != 0:
@@ -27,6 +32,9 @@ def get_articles(article_id=0, order_by="posted_time", start_num=0, end_num=10, 
             # tag_idで絞り込み
             tag = TagModel.objects.get(id=tag_id)
             articles = articles.filter(tag=tag)
+        if keyword is not None:
+            articles = articles.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))
+
         # order byで並び変える
         articles = articles.order_by(order_by)[start_num:end_num]
     else:
@@ -87,18 +95,14 @@ class ArticleView(views.APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
-        recieve_data = json.loads(request.body)
-        print(recieve_data)
-
-        article_id = recieve_data['article_id'] if ('article_id' in recieve_data.keys()) else 0
-        order_by = recieve_data['order_by'] if ('order_by' in recieve_data.keys()) else "posted_time"
-        start_num = recieve_data['start_num'] if ('start_num' in recieve_data.keys()) else 0
-        end_num = recieve_data['end_num'] if ('end_num' in recieve_data.keys()) else 10
-        user_id = recieve_data['user_id'] if ('user_id' in recieve_data.keys()) else 0
-        tag_id = recieve_data['tag_id'] if ('tag_id' in recieve_data.keys()) else 0
+        try:
+            recieve_data = json.loads(request.body)
+            print(recieve_data)
+        except Exception as e:
+            recieve_data = {}
 
         try:
-            article_ls = get_articles(article_id=article_id, order_by=order_by, start_num=start_num, end_num=end_num, user_id=user_id, tag_id=tag_id)
+            article_ls = get_articles(recieve_data)
             message = "success"
             status = 200
         except Exception as e:

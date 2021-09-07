@@ -25,8 +25,9 @@ def article_get():
         # "article_id": 1,
         "start_num": 0,
         "end_num": 10,
-        "user_id": 2,
+        # "user_id": 2,
         # "tag_id": 1,
+        "keyword": "hogehoge",
     }
     response = requests.get(url, data=json.dumps(data))
     print(response.json())
