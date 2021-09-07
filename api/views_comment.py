@@ -15,7 +15,7 @@ def get_comments(article_id):
         comment_dict = {
             "id": com.id,
             "text": com.text,
-            "user_id": com.user.id,
+            "user": {"user_id": com.user.id, "username": com.user.username},
             "posted_time": com.posted_time.timestamp()
         }
         comments_ls.append(comment_dict)

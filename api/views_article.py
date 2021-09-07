@@ -6,7 +6,7 @@ from rest_framework import status, views, permissions
 from rest_framework.response import Response
 
 from django.contrib.auth.models import User
-from .models import ArticleModel, TagModel
+from .models import ArticleModel, TagModel, ArticleTagsModel
 
 
 def get_articles(data):
@@ -31,8 +31,10 @@ def get_articles(data):
         if tag_id != 0:
             # tag_idで絞り込み
             tag = TagModel.objects.get(id=tag_id)
-            articles = articles.filter(tag=tag)
+            ids = [artag.article.id for artag in ArticleTagsModel.objects.filter(tag=tag)]
+            articles = articles.filter(id__in=ids)
         if keyword is not None:
+            #keywordでタイトル本文絞り込み
             articles = articles.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))
 
         # order byで並び変える
@@ -45,9 +47,9 @@ def get_articles(data):
         article = {
             'id': art.id,
             'title': art.title,
-            'tag_id': art.tag.id if art.tag != None else 0,
+            'tags': [{"tag_id": article_tag.tag.id, "tag_name": article_tag.tag.tag_name} for article_tag in ArticleTagsModel.objects.filter(article_id=art.id)],
             'text': art.text,
-            'user_id': art.user.id,
+            'user': {"user_id": art.user.id, "username": art.user.username},
             'posted_time': art.posted_time.timestamp(),
         }
         articles_ls.append(article)
@@ -58,29 +60,47 @@ def add_article(data):
     articleを追加
     '''
     user = User.objects.get(id=data['user_id'])
-    tag = TagModel.objects.get(id=data['tag_id'])
 
     article = ArticleModel(
         title = data['title'],
-        tag = tag,
         text = data['text'],
         user = user,
         posted_time = datetime.now(),
     )
-
     article.save()
+
+    tags = [TagModel.objects.get(id=tag_id) for tag_id in data['tag_ids']]
+    for tag in tags:
+        ArticleTagsModel(
+            article = article,
+            tag = tag,
+        ).save()
+
 
 def update_article(data):
     '''
     既存のarticleを編集
     '''
-    tag = TagModel.objects.get(id=data['tag_id'])
-
-    ArticleModel.objects.filter(id=data['article_id']).update(
+    article = ArticleModel.objects.filter(id=data['article_id'])
+    article.update(
         title = data['title'],
-        tag = tag,
         text = data['text'],
     )
+
+    # tagのつじつま合わせ
+    artags = ArticleTagsModel.objects.filter(article=article[0])
+    for artag in artags:
+        # 消されたタグ
+        if not artag.tag.id in data['tag_ids']:
+            artag.delete()
+    artag_tag_ids = [artag.tag.id for artag in artags]
+    for tag_id in data['tag_ids']:
+        # 増えたタグ
+        if not tag_id in artag_tag_ids:
+            ArticleTagsModel(
+                article = article[0],
+                tag = TagModel.objects.get(id=tag_id),
+            ).save()
 
 def delete_article(article_id):
     '''
