@@ -33,6 +33,8 @@ def add_tag(data):
     '''
     タグを追加
     '''
+    if len(TagModel.objects.filter(tag_name=data['tag_name'])) > 0:
+        raise ValueError(f"'{data['tag_name']}' already exists!")
     tag = TagModel(
         tag_name = data['tag_name'],
     )

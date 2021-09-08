@@ -22,9 +22,9 @@ def get_comments(article_id):
     
     return comments_ls
 
-def add_comment(article_id, data):
+def add_comment(article_id, user_id, data):
     article = ArticleModel.objects.get(id=article_id)
-    user = User.objects.get(id=data["user_id"])
+    user = User.objects.get(id=user_id)
 
     comment = CommentModel(
         text = data["text"],
@@ -62,7 +62,7 @@ class CommentView(views.APIView):
         print(recieve_data)
 
         try:
-            add_comment(article_id, recieve_data)
+            add_comment(article_id, user_id=request.user.id , data=recieve_data)
             status = 200
             message = "success"
         except Exception as e:

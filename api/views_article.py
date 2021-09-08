@@ -55,11 +55,11 @@ def get_articles(data):
         articles_ls.append(article)
     return articles_ls
 
-def add_article(data):
+def add_article(user_id, data):
     '''
     articleを追加
     '''
-    user = User.objects.get(id=data['user_id'])
+    user = User.objects.get(id=user_id)
 
     article = ArticleModel(
         title = data['title'],
@@ -77,11 +77,16 @@ def add_article(data):
         ).save()
 
 
-def update_article(data):
+def update_article(user_id, data):
     '''
     既存のarticleを編集
     '''
     article = ArticleModel.objects.filter(id=data['article_id'])
+    if article.user.id != user_id:
+        # 投稿者以外が編集しようとしたらエラー
+        raise ValueError("You have no permission to edit this article!")
+
+    # 記事内容の更新
     article.update(
         title = data['title'],
         text = data['text'],
@@ -102,11 +107,15 @@ def update_article(data):
                 tag = TagModel.objects.get(id=tag_id),
             ).save()
 
-def delete_article(article_id):
+def delete_article(user_id, data):
     '''
     既存のarticleを削除
     '''
-    ArticleModel.objects.get(id=article_id).delete()
+    article = ArticleModel.objects.get(id=data["article_id"])
+    if article.user.id != user_id:
+        # 投稿者以外が削除しようとしたらエラー
+        raise ValueError("You have no permission to edit this article!")
+    article.delete()
 
 
 
@@ -146,7 +155,7 @@ class ArticleView(views.APIView):
 
         # postされたデータをデータベースへ登録する
         try:
-            add_article(recieve_data)
+            add_article(user_id=request.user.id, data=recieve_data)
             message = "success"
             status = 200
         except Exception as e:
@@ -167,7 +176,7 @@ class ArticleView(views.APIView):
 
         # postされたデータをデータベースへ登録する
         try:
-            update_article(recieve_data)
+            update_article(user_id=request.user.id, data=recieve_data)
             message = "success"
             status = 200
         except Exception as e:
@@ -187,7 +196,7 @@ class ArticleView(views.APIView):
         print(recieve_data)
 
         try:
-            delete_article(recieve_data["article_id"])
+            delete_article(user_id=request.user.id, data=recieve_data)
             message = "success"
             status = 200
         except Exception as e:
