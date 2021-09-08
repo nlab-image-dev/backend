@@ -18,16 +18,15 @@ def get_articles(data):
     order_by = data['order_by'] if ('order_by' in data.keys()) else "posted_time"
     start_num = data['start_num'] if ('start_num' in data.keys()) else 0
     end_num = data['end_num'] if ('end_num' in data.keys()) else 10
-    user_id = data['user_id'] if ('user_id' in data.keys()) else 0
+    username = data['username'] if ('username' in data.keys()) else None
     tag_id = data['tag_id'] if ('tag_id' in data.keys()) else 0
     keyword = data['keyword'] if ('keyword' in data.keys()) else None
 
     if article_id == 0:
         articles = ArticleModel.objects.all()
-        if user_id != 0:
+        if username is not None:
             # user_idで絞り込み
-            user = User.objects.get(id=user_id)
-            articles = articles.filter(user=user)
+            articles = articles.filter(user__username__icontains=username)
         if tag_id != 0:
             # tag_idで絞り込み
             tag = TagModel.objects.get(id=tag_id)

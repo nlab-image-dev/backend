@@ -62,7 +62,7 @@ def article_get():
         # "article_id": 1,
         "start_num": 0,
         "end_num": 20,
-        # "user_id": 2,
+        "username": "aro",
         # "tag_id": 1,
         # "keyword": "hogehoge",
     }
