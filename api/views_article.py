@@ -42,6 +42,7 @@ def get_articles(data):
     else:
         articles = ArticleModel.objects.filter(id=article_id)
 
+    # Articleリスト作成
     articles_ls = []
     for art in articles:
         article = {
@@ -82,7 +83,10 @@ def update_article(user_id, data):
     既存のarticleを編集
     '''
     article = ArticleModel.objects.filter(id=data['article_id'])
-    if article.user.id != user_id:
+    if len(article) == 0:
+        raise ValueError(f"Not found Article ID {data['article_id']}")
+
+    if article[0].user.id != user_id:
         # 投稿者以外が編集しようとしたらエラー
         raise ValueError("You have no permission to edit this article!")
 
