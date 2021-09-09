@@ -31,7 +31,6 @@ def login(username, password):
     # print(response.json())
 
     return response.json()['token']
-    # myinfo(response.json()['token'])
 
 def myinfo(token):
     url = URL + "myinfo/"
@@ -133,12 +132,12 @@ def comment_post(token):
 
 
 if __name__ == "__main__":
-    # signup()
-    TOKEN = login("admin", "admin")
+    signup("test2", "test")
+    # TOKEN = login("test2", "test")
     # myinfo(TOKEN)
 
     # article_post(TOKEN)
-    article_get()
+    # article_get()
     # article_put(TOKEN)
     # article_delete(TOKEN)
     # article_get()
