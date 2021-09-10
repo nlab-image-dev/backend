@@ -17,7 +17,7 @@ def get_articles(data):
     article_id = int(data['article_id']) if ('article_id' in data.keys()) else 0
     order_by = data['order_by'] if ('order_by' in data.keys()) else "posted_time"
     start_num = int(data['start_num']) if ('start_num' in data.keys()) else 0
-    end_num = int(data['end_num']) if ('end_num' in data.keys()) else 10
+    end_num = int(data['end_num']) if ('end_num' in data.keys()) else -1
     username = data['username'] if ('username' in data.keys()) else None
     tag_id = int(data['tag_id']) if ('tag_id' in data.keys()) else 0
     keyword = data['keyword'] if ('keyword' in data.keys()) else None
@@ -37,7 +37,10 @@ def get_articles(data):
             articles = articles.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))
 
         # order byで並び変える
-        articles = articles.order_by(order_by)[start_num:end_num]
+        if end_num == -1:
+            articles = articles.order_by(order_by)
+        else:
+            articles = articles.order_by(order_by)[start_num:end_num]
     else:
         articles = ArticleModel.objects.filter(id=article_id)
 
