@@ -59,14 +59,15 @@ def article_get():
     url = URL + "article/"
     data = {
         # "article_id": 1,
+        "reversed": 1,
         # "start_num": 0,
         # "end_num": 20,
         # "username": "admin",
         # "tag_id": 1,
         # "keyword": "hogehoge",
     }
-    # response = requests.get(url, data=json.dumps(data))
-    response = requests.get(url)
+    response = requests.get(url, data=json.dumps(data))
+    # response = requests.get(url)
     print(response.json())
     # print(json.loads(response.json())["articles"][0]["user"]["username"])
 
