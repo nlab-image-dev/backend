@@ -15,7 +15,8 @@ def get_articles(data):
     引数で取得内容を選択
     '''
     article_id = int(data['article_id']) if ('article_id' in data.keys()) else 0
-    order_by = data['order_by'] if ('order_by' in data.keys()) else "posted_time"
+    order_by = data['order_by'] if ('order_by' in data.keys()) else "id"
+    reversed = int(data['reversed']) if ('reversed' in data.keys()) else 1
     start_num = int(data['start_num']) if ('start_num' in data.keys()) else 0
     end_num = int(data['end_num']) if ('end_num' in data.keys()) else -1
     username = data['username'] if ('username' in data.keys()) else None
@@ -41,6 +42,7 @@ def get_articles(data):
             articles = articles.order_by(order_by)
         else:
             articles = articles.order_by(order_by)[start_num:end_num]
+        
     else:
         articles = ArticleModel.objects.filter(id=article_id)
 
@@ -56,6 +58,10 @@ def get_articles(data):
             'posted_time': art.posted_time.timestamp(),
         }
         articles_ls.append(article)
+
+    if reversed:
+        articles_ls.reverse()
+
     return articles_ls
 
 def add_article(user_id, data):
