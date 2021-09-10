@@ -31,7 +31,6 @@ def login(username, password):
     # print(response.json())
 
     return response.json()['token']
-    # myinfo(response.json()['token'])
 
 def myinfo(token):
     url = URL + "myinfo/"
@@ -60,14 +59,16 @@ def article_get():
     url = URL + "article/"
     data = {
         # "article_id": 1,
-        "start_num": 0,
-        "end_num": 20,
-        "username": "aro",
+        # "start_num": 0,
+        # "end_num": 20,
+        # "username": "admin",
         # "tag_id": 1,
         # "keyword": "hogehoge",
     }
-    response = requests.get(url, data=json.dumps(data))
+    # response = requests.get(url, data=json.dumps(data))
+    response = requests.get(url)
     print(response.json())
+    # print(json.loads(response.json())["articles"][0]["user"]["username"])
 
 def article_put(token):
     url = URL + "article/"
@@ -125,7 +126,6 @@ def comment_post(token):
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
         "text": "abccba",
-        "user_id": 2,
     }
 
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -133,8 +133,8 @@ def comment_post(token):
 
 
 if __name__ == "__main__":
-    # signup()
-    TOKEN = login("admin", "admin")
+    # signup("admin", "admin")
+    # TOKEN = login("admin", "admin")
     # myinfo(TOKEN)
 
     # article_post(TOKEN)
