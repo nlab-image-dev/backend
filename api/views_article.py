@@ -14,12 +14,13 @@ def get_articles(data):
     articleを取得
     引数で取得内容を選択
     '''
-    article_id = data['article_id'] if ('article_id' in data.keys()) else 0
-    order_by = data['order_by'] if ('order_by' in data.keys()) else "posted_time"
-    start_num = data['start_num'] if ('start_num' in data.keys()) else 0
-    end_num = data['end_num'] if ('end_num' in data.keys()) else 10
+    article_id = int(data['article_id']) if ('article_id' in data.keys()) else 0
+    order_by = data['order_by'] if ('order_by' in data.keys()) else "id"
+    reversed = int(data['reversed']) if ('reversed' in data.keys()) else 1
+    start_num = int(data['start_num']) if ('start_num' in data.keys()) else 0
+    end_num = int(data['end_num']) if ('end_num' in data.keys()) else -1
     username = data['username'] if ('username' in data.keys()) else None
-    tag_id = data['tag_id'] if ('tag_id' in data.keys()) else 0
+    tag_id = int(data['tag_id']) if ('tag_id' in data.keys()) else 0
     keyword = data['keyword'] if ('keyword' in data.keys()) else None
 
     if article_id == 0:
@@ -37,7 +38,11 @@ def get_articles(data):
             articles = articles.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))
 
         # order byで並び変える
-        articles = articles.order_by(order_by)[start_num:end_num]
+        if end_num == -1:
+            articles = articles.order_by(order_by)
+        else:
+            articles = articles.order_by(order_by)[start_num:end_num]
+        
     else:
         articles = ArticleModel.objects.filter(id=article_id)
 
@@ -53,6 +58,10 @@ def get_articles(data):
             'posted_time': art.posted_time.timestamp(),
         }
         articles_ls.append(article)
+
+    if reversed:
+        articles_ls.reverse()
+
     return articles_ls
 
 def add_article(user_id, data):
@@ -131,7 +140,8 @@ class ArticleView(views.APIView):
             recieve_data = json.loads(request.body)
             print(recieve_data)
         except Exception as e:
-            recieve_data = {}
+            recieve_data = request.GET
+            print(recieve_data)
 
         try:
             article_ls = get_articles(recieve_data)

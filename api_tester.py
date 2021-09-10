@@ -59,14 +59,17 @@ def article_get():
     url = URL + "article/"
     data = {
         # "article_id": 1,
-        "start_num": 0,
-        "end_num": 20,
-        "username": "aro",
+        "reversed": 1,
+        # "start_num": 0,
+        # "end_num": 20,
+        # "username": "admin",
         # "tag_id": 1,
         # "keyword": "hogehoge",
     }
     response = requests.get(url, data=json.dumps(data))
+    # response = requests.get(url)
     print(response.json())
+    # print(json.loads(response.json())["articles"][0]["user"]["username"])
 
 def article_put(token):
     url = URL + "article/"
@@ -124,7 +127,6 @@ def comment_post(token):
     headers = {'Content-Type': 'application/json', 'Authorization': f'JWT {token}'}
     data = {
         "text": "abccba",
-        "user_id": 2,
     }
 
     response = requests.post(url=url, data=json.dumps(data), headers=headers)
@@ -132,12 +134,12 @@ def comment_post(token):
 
 
 if __name__ == "__main__":
-    signup("test2", "test")
-    # TOKEN = login("test2", "test")
+    # signup("admin", "admin")
+    # TOKEN = login("admin", "admin")
     # myinfo(TOKEN)
 
     # article_post(TOKEN)
-    # article_get()
+    article_get()
     # article_put(TOKEN)
     # article_delete(TOKEN)
     # article_get()
